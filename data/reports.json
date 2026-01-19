@@ -1,0 +1,64 @@
+{
+  "reports": [
+    {
+      "id": 1,
+      "caseId": 3,
+      "authorId": 1,
+      "date": "2026-01-15T10:00:00Z",
+      "location": "Gdańsk, ul. Słoneczna 22",
+      "content": "Dokumentacja miejsca biura i zabezpieczenie śladów.",
+      "photos": ["image_1.jpg"],
+      "fingerprints": ["image_1.jpg"]
+    },
+    {
+      "id": 2,
+      "caseId": 7,
+      "authorId": 1,
+      "date": "2026-01-16T11:30:00Z",
+      "location": "Warszawa, ul. Marszałkowska 5",
+      "content": "Zabezpieczono fałszywe dokumenty i wykonano zdjęcia.",
+      "photos": ["image_2.jpg"],
+      "fingerprints": ["image_2.jpg"]
+    },
+    {
+      "id": 3,
+      "caseId": 11,
+      "authorId": 2,
+      "date": "2026-01-16T14:20:00Z",
+      "location": "Kraków, ul. Główna 10",
+      "content": "Zabezpieczono nielegalną broń, wykonano dokumentację fotograficzną.",
+      "photos": ["image_3.jpg"],
+      "fingerprints": ["image_3.jpg"]
+    },
+    {
+      "id": 4,
+      "caseId": 12,
+      "authorId": 2,
+      "date": "2026-01-17T09:45:00Z",
+      "location": "Poznań, ul. Stary Rynek 3",
+      "content": "Zabezpieczono ślady przestępstwa i wykonano odciski palców.",
+      "photos": ["image_4.jpg"],
+      "fingerprints": ["image_4.jpg"]
+    },
+    {
+      "id": 5,
+      "caseId": 14,
+      "authorId": 1,
+      "date": "2026-01-17T13:15:00Z",
+      "location": "Wrocław, ul. Dworcowa 12",
+      "content": "Zabezpieczono dokumenty finansowe i wykonano fotografie miejsca.",
+      "photos": ["image_5.jpg"],
+      "fingerprints": ["image_5.jpg"]
+    },
+    {
+      "id": 6,
+      "caseId": 19,
+      "authorId": 3,
+      "date": "2026-01-18T16:00:00Z",
+      "location": "Szczecin, ul. Graniczna 7",
+      "content": "Zabezpieczono towary przemycane przez granicę. Dokumentacja fotograficzna i odciski palców.",
+      "photos": ["image_6.jpg"],
+      "fingerprints": ["image_6.jpg"]
+    }
+  ]
+}

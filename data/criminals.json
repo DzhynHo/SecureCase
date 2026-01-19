@@ -1,0 +1,24 @@
+{
+  "criminals": [
+    {"id":1,"fullName":"Jan Kowalski","description":"Kradzież z włamaniem","status":"poszukiwany","penalty":"do 5 lat","article":"art.279 KK","verdict":"Brak","image":"image_1.jpg","caseIds":[1,2]},
+    {"id":2,"fullName":"Piotr Nowak","description":"Handel narkotykami","status":"zatrzymany","penalty":"od 1 do 10 lat","article":"art.59 UPN","verdict":"Oczekuje","image":"image_2.jpg","caseIds":[2,3]},
+    {"id":3,"fullName":"Marek Wiśniewski","description":"Oszustwa finansowe","status":"skazany","penalty":"6 lat","article":"art.286 KK","verdict":"6 lat więzienia","image":"image_3.jpg","caseIds":[3,4]},
+    {"id":4,"fullName":"Tomasz Zieliński","description":"Grupa przestępcza","status":"skazany","penalty":"8 lat","article":"art.258 KK","verdict":"8 lat więzienia","image":"image_4.jpg","caseIds":[4,5]},
+    {"id":5,"fullName":"Adam Kaczmarek","description":"Napad rabunkowy","status":"zatrzymany","penalty":"2-12 lat","article":"art.280 KK","verdict":"Postępowanie","image":"image_5.jpg","caseIds":[5,6]},
+    {"id":6,"fullName":"Krzysztof Dąbrowski","description":"Jazda po alkoholu","status":"skazany","penalty":"2 lata ograniczenia wolności","article":"art.178a KK","verdict":"Zakaz prowadzenia","image":"image_6.jpg","caseIds":[6,7]},
+    {"id":7,"fullName":"Paweł Lewandowski","description":"Fałszowanie dokumentów","status":"skazany","penalty":"3 lata","article":"art.270 KK","verdict":"3 lata więzienia","image":"image_7.jpg","caseIds":[7,8]},
+    {"id":8,"fullName":"Łukasz Wójcik","description":"Przywłaszczenie mienia","status":"poszukiwany","penalty":"do 8 lat","article":"art.284 KK","verdict":"Brak","image":"image_8.jpg","caseIds":[8,9]},
+    {"id":9,"fullName":"Rafał Kamiński","description":"Pobicie ze skutkiem ciężkim","status":"skazany","penalty":"5 lat","article":"art.156 KK","verdict":"5 lat więzienia","image":"image_9.jpg","caseIds":[9,10]},
+    {"id":10,"fullName":"Michał Piotrowski","description":"Kradzież pojazdów","status":"poszukiwany","penalty":"do 10 lat","article":"art.278 KK","verdict":"Brak","image":"image_10.jpg","caseIds":[10,11]},
+    {"id":11,"fullName":"Sebastian Grabowski","description":"Nielegalna broń","status":"zatrzymany","penalty":"6 mies.–8 lat","article":"art.263 KK","verdict":"Oczekuje","image":"image_11.jpg","caseIds":[11,12]},
+    {"id":12,"fullName":"Marcin Pawlak","description":"Wymuszenie rozbójnicze","status":"skazany","penalty":"7 lat","article":"art.282 KK","verdict":"7 lat więzienia","image":"image_12.jpg","caseIds":[12,13]},
+    {"id":13,"fullName":"Daniel Michalski","description":"Oszustwa internetowe","status":"zatrzymany","penalty":"do 6 lat","article":"art.287 KK","verdict":"Sprawa w toku","image":"image_13.jpg","caseIds":[13,14]},
+    {"id":14,"fullName":"Robert Król","description":"Pranie brudnych pieniędzy","status":"skazany","penalty":"9 lat","article":"art.299 KK","verdict":"9 lat więzienia","image":"image_14.jpg","caseIds":[14,15]},
+    {"id":15,"fullName":"Szymon Jankowski","description":"Bójka masowa","status":"skazany","penalty":"1 rok w zawieszeniu","article":"art.158 KK","verdict":"Wyrok w zawieszeniu","image":"image_15.jpg","caseIds":[15,16]},
+    {"id":16,"fullName":"Patryk Mazur","description":"Zniszczenie mienia publicznego","status":"zatrzymany","penalty":"do 5 lat","article":"art.288 KK","verdict":"Oczekuje","image":"image_16.jpg","caseIds":[16,17]},
+    {"id":17,"fullName":"Kamil Rutkowski","description":"Groźby karalne","status":"skazany","penalty":"6 miesięcy","article":"art.190 KK","verdict":"6 miesięcy więzienia","image":"image_17.jpg","caseIds":[17,18]},
+    {"id":18,"fullName":"Norbert Ostrowski","description":"Nielegalne gry hazardowe","status":"skazany","penalty":"grzywna 100 000 PLN","article":"art.107 KK skarb.","verdict":"Grzywna","image":"image_18.jpg","caseIds":[18,19]},
+    {"id":19,"fullName":"Bartłomiej Sadowski","description":"Przemyt towarów","status":"zatrzymany","penalty":"1–8 lat","article":"art.86 KK skarb.","verdict":"Postępowanie w toku","image":"image_19.jpg","caseIds":[19,20]},
+    {"id":20,"fullName":"Oskar Malinowski","description":"Unikanie alimentów","status":"skazany","penalty":"1 rok ograniczenia wolności","article":"art.209 KK","verdict":"Prace społeczne","image":"image_20.jpg","caseIds":[20]}
+  ]
+}
