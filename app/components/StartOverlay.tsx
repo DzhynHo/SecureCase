@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import styles from './start-overlay.module.css';
 
@@ -17,6 +18,7 @@ type FallingLetter = {
 export default function StartOverlay() {
   const [open, setOpen] = useState(true);
   const [lettersBg, setLettersBg] = useState<FallingLetter[]>([]);
+  const router = useRouter();
 
   
   useEffect(() => {
@@ -33,9 +35,8 @@ export default function StartOverlay() {
 
   if (!open) return null;
 
-
   return (
-    <div className={styles.overlay} onClick={() => setOpen(false)}>
+    <div className={styles.overlay} onClick={() => { setOpen(false); router.push('/login'); }}>
       {/* фон з падаючими літерами – тепер детермінований після першого рендера на клієнті */}
       <div
         style={{
@@ -78,15 +79,7 @@ export default function StartOverlay() {
             priority
           />
 
-          <h1
-            style={{
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: 'white',
-            }}
-          >
-        
-          </h1>
+          {/* only logo shown */}
 
         </div>
       </div>

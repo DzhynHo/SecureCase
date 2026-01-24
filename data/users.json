@@ -2,9 +2,9 @@
   "users": [
     {
       "id": 1,
-      "firstName": "Yama",
+      "firstName": "Yana",
       "lastName": "Trotsenko",
-      "username": "yama.trotsenko",
+      "username": "yana.trotsenko",
       "passwordHash": "$2b$10$X7zGf6aW8pK8vYbR9J0QVuZ8hQeWZfTZEN3b1lF8HbVY9C3mZpR1K",
       "role": "police_officer",
       "assignedCaseIds": [1,2,3,4,5,6,7]
@@ -20,12 +20,12 @@
     },
     {
       "id": 3,
-      "firstName": "Barack",
-      "lastName": "Obama",
-      "username": "barack.obama",
+      "firstName": "Nico",
+      "lastName": "Walker",
+      "username": "nico.walker",
       "passwordHash": "$2b$10$3cF4eD6vN8Y9HqP7r0L5du1X2R8gQ7yT9v1Zc5oJkL4uG6WnF1p9a",
       "role": "colonel",
-      "assignedCaseIds": [15,16,17,18,19,20]
+      "assignedCaseIds": []
     }
   ]
 }
