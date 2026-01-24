@@ -1,0 +1,53 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(23, 23, 23, 0.7);
+  backdrop-filter: blur(24px);
+}
+
+.glassCard {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+  padding: 24px 40px;
+}
+
+.fallLetter {
+  position: absolute;
+  top: -10%;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
+  animation-name: fallDown;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.titleLetter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-40px) scale(0.8);
+  animation: titleDrop 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@keyframes fallDown {
+  0% {
+    transform: translateY(-15vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(115vh);
+    opacity: 0;
+  }
+}
+
+
+
+
