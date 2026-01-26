@@ -1,5 +1,7 @@
 # SecureCase
 
+[Zobacz działający projekt online](https://secure-case-six.vercel.app/)
+
 SecureCase to system zarządzania sprawami policyjnymi umożliwiający cyfrowe zarządzanie sprawami, przestępcami, raportami oraz dowodami w ramach jednostki policji.
 ## Funkcjonalności
 
