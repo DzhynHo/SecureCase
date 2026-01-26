@@ -4,11 +4,11 @@ import criminalsData from "@/data/criminals.json";
 import usersData from "@/data/users.json";
 import reportsData from "@/data/reports.json";
 import Link from "next/link";
-import ReportForm from '../../components/ReportForm';
-import ReportReviewSummary from '@/app/components/ReportReviewSummary';
-import CaseReportsClient from '@/app/components/CaseReportsClient';
-import CasePhotosManager from '@/app/components/CasePhotosManager';
-import ActivityLog from '@/app/components/ActivityLog';
+import ReportForm from "../../components/ReportForm";
+import ReportReviewSummary from "@/app/components/ReportReviewSummary";
+import CaseReportsClient from "@/app/components/CaseReportsClient";
+import CasePhotosManager from "@/app/components/CasePhotosManager";
+import styles from "./case-detail.module.css";
 
 type Props = { params: any };
 
@@ -17,7 +17,7 @@ export default async function CasePage({ params }: Props) {
   const id = Number(resolvedParams.id);
   const allCases = (casesData as any).cases || [];
   const c = allCases.find((x: any) => x.id === id);
-  if (!c) return <div className="p-8">Case not found</div>;
+  if (!c) return <div className={styles.wrapper}>Case not found</div>;
 
   const criminals = (criminalsData as any).criminals || [];
   const users = (usersData as any).users || [];
@@ -29,85 +29,120 @@ export default async function CasePage({ params }: Props) {
   function norm(p: string | undefined) {
     if (!p) return "";
     if (p.startsWith("/images")) return p;
-    if (p.startsWith("/mugshots") || p.startsWith("/fingerprints") || p.startsWith("/places")) return `/images${p}`;
+    if (
+      p.startsWith("/mugshots") ||
+      p.startsWith("/fingerprints") ||
+      p.startsWith("/places")
+    )
+      return `/images${p}`;
     return p;
   }
 
+  const primaryCriminalId =
+    c.criminalIds && c.criminalIds.length > 0 ? c.criminalIds[0] : null;
+  const primaryCriminal = primaryCriminalId
+    ? criminals.find((x: any) => x.id === primaryCriminalId)
+    : null;
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-        <Link href="/dashboard" className="text-sm text-blue-600">← Back</Link>
-        <h1 className="text-2xl font-bold mt-4">{c.number} — {c.title}</h1>
-        <p className="text-sm text-black mt-2">Status: {c.status}</p>
-        <p className="mt-3 text-black">{c.description}</p>
+    <div className={styles.wrapper}>
+      <div className={styles.card}>
+        <Link href="/dashboard" className={styles.backLink}>
+          ← Back
+        </Link>
 
-        <div className="mt-4">
-          <h3 className="font-semibold text-black">Assigned officer</h3>
-          {assignedUser ? (
-            <div className="text-black">{assignedUser.firstName} {assignedUser.lastName} ({assignedUser.username})</div>
-          ) : (
-            <div className="text-black">Not assigned</div>
-          )}
-        </div>
+        <h1 className={styles.title}>
+          {c.number} — {c.title}
+        </h1>
+        <p className={styles.status}>Status: {c.status}</p>
+        <p className={styles.description}>{c.description}</p>
 
-        <div className="mt-4">
-          <h3 className="font-semibold text-black">Criminals</h3>
-          <div>
-            {/* Show primary (first) criminal only */}
-            {(() => {
-              const primaryId = (c.criminalIds && c.criminalIds.length > 0) ? c.criminalIds[0] : null;
-              if (!primaryId) return <div className="text-black">No criminal linked</div>;
-              const cr = criminals.find((x: any) => x.id === primaryId);
-              if (!cr) return <div className="text-black">#{primaryId}</div>;
-              return (
-                <div className="flex gap-3 items-start p-2 border rounded bg-white">
-                  <img src={norm(cr.image)} alt={cr.fullName} className="w-24 h-24 object-cover rounded" />
+        <div className={styles.sectionsGrid}>
+          {/* LEWA KOLUMNA: officer + criminals + reports */}
+          <div className={styles.column}>
+            <section className={styles.section}>
+              <h3 className={styles.sectionHeader}>Assigned officer</h3>
+              <p className={styles.assignedOfficer}>
+                {assignedUser ? (
+                  <>
+                    {assignedUser.firstName} {assignedUser.lastName} (
+                    {assignedUser.username})
+                  </>
+                ) : (
+                  <span className={styles.sectionMuted}>Not assigned</span>
+                )}
+              </p>
+            </section>
+
+            <section className={styles.section}>
+              <h3 className={styles.sectionHeader}>Criminals</h3>
+              {!primaryCriminal && (
+                <p className={styles.sectionMuted}>No criminal linked.</p>
+              )}
+              {primaryCriminal && (
+                <div className={styles.criminalCard}>
+                  <img
+                    src={norm(primaryCriminal.image)}
+                    alt={primaryCriminal.fullName}
+                    className={styles.criminalImage}
+                  />
                   <div>
-                    <div className="font-medium text-black">{cr.fullName}</div>
-                    <div className="text-sm text-black">{cr.description}</div>
-                    <div className="text-sm text-black">Status: {cr.status}</div>
-                  </div>
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-
-        <div className="mt-4">
-          <h3 className="font-semibold text-black">Reports for this case</h3>
-          {caseReports.length === 0 ? (
-            <p className="text-black">No reports.</p>
-          ) : (
-            <ul className="space-y-3">
-              {caseReports.map((r: any) => (
-                <li key={r.id} className="p-3 border rounded">
-                  <div className="flex items-start justify-between">
-                    <Link href={`/reports/${r.id}`} className="block">
-                      <div className="font-medium text-black">Report #{r.id} — {new Date(r.date).toLocaleString()}</div>
-                      <div className="text-sm text-black">{r.location}</div>
-                    </Link>
-                    <div>
-                      <ReportReviewSummary reportId={r.id} />
+                    <div className={styles.criminalName}>
+                      {primaryCriminal.fullName}
+                    </div>
+                    <div className={styles.criminalDesc}>
+                      {primaryCriminal.description}
+                    </div>
+                    <div className={styles.sectionText}>
+                      Status: {primaryCriminal.status}
                     </div>
                   </div>
-                  <div className="text-sm text-black mt-1">{r.content}</div>
-                </li>
-              ))}
-            </ul>
-          )}
+                </div>
+              )}
+            </section>
+
+            <section className={styles.section}>
+              <h3 className={styles.sectionHeader}>Reports for this case</h3>
+              {caseReports.length === 0 ? (
+                <p className={styles.sectionMuted}>No reports.</p>
+              ) : (
+                <ul className={styles.caseReportsList}>
+                  {caseReports.map((r: any) => (
+                    <li key={r.id} className={styles.caseReportItem}>
+                      <div className={styles.caseReportTop}>
+                        <Link
+                          href={`/reports/${r.id}`}
+                          className={styles.caseReportLink}
+                        >
+                          <div className={styles.caseReportTitle}>
+                            Report #{r.id} —{" "}
+                            {new Date(r.date).toLocaleString()}
+                          </div>
+                          <div className={styles.caseReportMeta}>
+                            {r.location}
+                          </div>
+                        </Link>
+                        <ReportReviewSummary reportId={r.id} />
+                      </div>
+                      <div className={styles.caseReportBody}>{r.content}</div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          </div>
+
+          {/* PRAWA KOLUMNA: activity */}
+          
         </div>
-        <div className="mt-4">
-          <h3 className="font-semibold text-black">Activity</h3>
-          <ActivityLog caseId={c.id} />
-        </div>
-        {/* client-only tools for police officers */}
-        <div>
+
+        {/* narzędzia klientowe (raport + zdjęcia + podgląd) */}
+        <section className={styles.toolsSection}>
           <ReportForm caseId={c.id} />
           <CasePhotosManager caseId={c.id} />
           <CaseReportsClient caseId={c.id} />
-        </div>
+        </section>
       </div>
     </div>
   );
 }
-

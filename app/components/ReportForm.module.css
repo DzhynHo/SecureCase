@@ -1,0 +1,81 @@
+.wrapper {
+  margin-top: 0.5rem;
+  border-radius: 0.9rem;
+  border: 1px solid #1f2937;
+  background-color: #020617;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: #cbd5f5;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  border-radius: 0.55rem;
+  border: 1px solid #4b5563;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.85rem;
+  background-color: #020617;
+  color: #f9fafb;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #6b7280;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+}
+
+.textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.actions {
+  margin-top: 0.3rem;
+}
+
+.submit {
+  padding: 0.5rem 1rem;
+  border-radius: 0.6rem;
+  background: linear-gradient(to right, #2563eb, #1d4ed8);
+  color: #f9fafb;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.5);
+  transition: filter 0.15s ease, transform 0.05s ease, box-shadow 0.15s ease;
+}
+
+.submit:hover {
+  filter: brightness(1.05);
+}
+
+.submit:active {
+  transform: translateY(1px);
+}

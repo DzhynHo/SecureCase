@@ -1,0 +1,411 @@
+/* TŁO STRONY */
+.wrapper {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: #3a4047; /* jak login */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+/* GÓRNY PANEL WELCOME ROZCIĄGNIĘTY */
+.topBar {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  border-radius: 1rem;
+  background: rgba(55, 65, 81, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.topBarLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.title {
+  font-size: 1.3rem;
+  font-weight: 650;
+  color: #f9fafb;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: #d1d5db;
+}
+
+.topBarRight {
+  display: flex;
+  gap: 0.5rem;
+}
+
+
+/* dwie niezależne kolumny dla colonela */
+.cols2 {
+  grid-column: 1 / -1;           /* zajmuje cały wiersz gridu */
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1.2fr); /* lewa trochę szersza */
+  gap: 1.2rem;
+}
+
+/* stos kart w kolumnie */
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+/* na małych ekranach kolumny jedna pod drugą */
+@media (max-width: 900px) {
+  .cols2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* rząd create new case + activity log obok siebie */
+.topRow {
+  grid-column: 1 / -1; /* zajmuje cały wiersz w gridzie */
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr); /* lekko większy log */
+  gap: 1.2rem;
+}
+
+/* karty w tym rzędzie nie rozciągają się razem z reportami */
+.topRow .card {
+  min-height: 0;
+}
+
+/* na małych ekranach jedna pod drugą */
+@media (max-width: 900px) {
+  .topRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+
+/* PROSTOKĄTNE PRZYCISKI W TOPBARZE */
+.topButton,
+.topButtonSecondary {
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.55rem;       /* już nie pigułki */
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease, transform 0.05s ease, border-color 0.15s ease;
+}
+
+.topButton {
+  background: #2563eb;
+  color: #f9fafb;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.55);
+}
+
+.topButton:hover {
+  background: #1d4ed8;
+}
+
+.topButtonSecondary {
+  background-color: #4b5563;
+  color: #e5e7eb;
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+.topButtonSecondary:hover {
+  background-color: #374151;
+}
+
+/* SIATKA KART */
+.grid {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-auto-rows: minmax(220px, auto);
+  gap: 1.2rem;
+}
+
+/* KARTY – JAŚNIEJSZE NIŻ TŁO */
+.card,
+.cardWide,
+.cardTall {
+  background: #111827; /* ciemny granat, ale nie czarny */
+  border-radius: 1rem;
+  padding: 1.2rem 1.3rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+  border: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardWide {
+  grid-column: span 2;
+}
+
+.cardTall {
+  min-height: 260px;
+}
+
+/* NAGŁÓWKI KART */
+.cardTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+  color: #f9fafb;
+}
+
+
+
+/* DÓŁ Z ALERTEM + LISTĄ UTWORZONYCH */
+.bottomPanel {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bottomTitle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #f9fafb;
+}
+
+/* TEKSTY */
+.muted {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.mutedSmall {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+/* LISTY W KARTACH */
+.simpleList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.simpleListItem {
+  border-radius: 0.7rem;
+  border: 1px solid #1f2937;
+  padding: 0.7rem 0.8rem;
+  background-color: #020617; /* jaśniej niż tło tekstu, ale ciemne */
+  transition: background-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.05s ease;
+}
+
+.simpleListItem:hover {
+  background-color: #0b1120;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
+  transform: translateY(-1px);
+}
+
+.simpleListRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.simpleListMain {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #f9fafb; /* jasny tekst – czytelny */
+}
+
+.simpleListSub {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.simpleListBody {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+}
+
+.linkBlock {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+}
+
+.badgeWrapper {
+  margin-left: 0.5rem;
+}
+
+/* PASEK FILTRÓW – PROSTOKĄTNE PRZYCISKI W RZĘDZIE */
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.filterButton {
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.55rem; /* już nie okrągłe */
+  border: 1px solid #374151;
+  background-color: #111827;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.filterButtonActive {
+  background-color: #2563eb;
+  color: #f9fafb;
+  border-color: #2563eb;
+}
+
+/* FORMULARZ TWORZENIA SPRAWY */
+.formStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.55rem;
+  border: 1px solid #4b5563;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  outline: none;
+  background-color: #020617;
+  color: #f9fafb;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.input::placeholder {
+  color: #6b7280;
+}
+
+.input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+  background-color: #020617;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.primaryButton {
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.6rem;
+  background: linear-gradient(to right, #16a34a, #15803d);
+  color: #f9fafb;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: box-shadow 0.15s ease, transform 0.05s ease;
+  box-shadow: 0 10px 25px rgba(22, 163, 74, 0.45);
+}
+
+.primaryButton:hover {
+  box-shadow: 0 15px 35px rgba(22, 163, 74, 0.6);
+}
+
+.primaryButton:active {
+  transform: translateY(1px);
+}
+
+/* ALERT / KOMUNIKAT */
+.alert {
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.6rem;
+  background-color: #fef9c3;
+  border: 1px solid #facc15;
+  font-size: 0.8rem;
+  color: #854d0e;
+}
+
+/* LOADING */
+.loading {
+  padding: 2rem;
+  font-size: 0.9rem;
+  color: #f9fafb;
+}
+
+/* RESPONSYWNOŚĆ */
+@media (max-width: 768px) {
+  .topBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .topBarRight {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .cardWide {
+    grid-column: span 1;
+  }
+}
+
+/* wiersz: po lewej duża lista raportów, po prawej wąski log */
+.reportsRow {
+  grid-column: 1 / -1; /* zajmuje całą szerokość gridu */
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+  gap: 1.2rem;
+}
+
+/* główna część (raporty) – wygląda jak cardWide */
+.reportsMain {
+  background: #111827;
+  border-radius: 1rem;
+  padding: 1.2rem 1.3rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+  border: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+}
+
+/* prawa kolumna – log */
+.reportsSide {
+  background: #111827;
+  border-radius: 1rem;
+  padding: 1.2rem 1.3rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+  border: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* na małych ekranach log pod raportami */
+@media (max-width: 900px) {
+  .reportsRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
