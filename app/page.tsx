@@ -1,17 +1,71 @@
+"use client";
+
 import React from "react";
+import { useRouter } from "next/navigation";
 import StartOverlay from "./components/StartOverlay";
+import styles from "./home.module.css";
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <>
       <StartOverlay />
 
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center p-8">
-        <div className="w-full max-w-2xl bg-white p-8 rounded shadow text-center">
-          <h1 className="text-2xl font-bold mb-2">Welcome to Securecase</h1>
-          <p className="text-gray-600">Click the Start button to sign in.</p>
+      <div className={styles.wrapper}>
+        {/* TOP BAR */}
+        <div className={styles.topBar}>
+          <div className={styles.topBarLeft}>
+            <div className={styles.title}>Welcome to Securecase</div>
+            <div className={styles.subtitle}>
+              System bezpiecznego zarządzania sprawami i raportami
+            </div>
+          </div>
+
+          <div className={styles.topBarRight}>
+            <button
+              className={styles.topButton}
+              onClick={() => router.push("/login")}
+            >
+              Sign in
+            </button>
+          </div>
         </div>
-      </main>
+
+        {/* CONTENT */}
+        <div className={styles.grid}>
+          <div className={styles.cardWide}>
+            <div className={styles.cardTitle}>Getting started</div>
+            <p className={styles.muted}>
+              Securecase umożliwia zarządzanie sprawami, raportami oraz
+              dziennikiem aktywności w jednym bezpiecznym miejscu.
+            </p>
+          </div>
+
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Features</div>
+            <ul className={styles.simpleList}>
+              <li className={styles.simpleListItem}>
+                Zarządzanie sprawami
+              </li>
+              <li className={styles.simpleListItem}>
+                Raporty niestandardowe
+              </li>
+              <li className={styles.simpleListItem}>
+                Rejestr aktywności
+              </li>
+            </ul>
+          </div>
+
+          <div className={styles.card}>
+            <div className={styles.cardTitle}>Security</div>
+            <p className={styles.mutedSmall}>
+              Dane są przechowywane lokalnie. Użytkownik ma pełną kontrolę
+              nad eksportem, importem oraz synchronizacją danych.
+            </p>
+          </div>
+        </div>
+      </div>
     </>
   );
 }

@@ -15,9 +15,41 @@ type Props = { params: any };
 export default async function CasePage({ params }: Props) {
   const resolvedParams = await params;
   const id = Number(resolvedParams.id);
-  const allCases = (casesData as any).cases || [];
-  const c = allCases.find((x: any) => x.id === id);
-  if (!c) return <div className={styles.wrapper}>Case not found</div>;
+  // include custom cases created locally
+  const staticCases = (casesData as any).cases || [];
+  let combined = [...staticCases];
+  try {
+    const customRaw = typeof window !== 'undefined' ? localStorage.getItem('customCases') : null;
+    const custom = customRaw ? JSON.parse(customRaw) : [];
+    if (custom && custom.length) combined = [...custom, ...combined];
+  } catch {}
+
+  try {
+    const delRaw = typeof window !== 'undefined' ? localStorage.getItem('deletedCaseIds') || '[]' : '[]';
+    const deleted = delRaw ? JSON.parse(delRaw) : [];
+    if (deleted && deleted.length) {
+      combined = combined.filter((c: any) => !deleted.includes(Number(c.id)));
+    }
+  } catch {}
+
+  // dedupe
+  const seen = new Set<number>();
+  const unique: any[] = [];
+  for (const item of combined) {
+    const idVal = Number(item.id);
+    if (!seen.has(idVal)) {
+      seen.add(idVal);
+      unique.push(item);
+    }
+  }
+  combined = unique;
+
+  const c = combined.find((x: any) => Number(x.id) === Number(id));
+  if (!c) {
+    // server cannot access localStorage; use client loader to show locally-created cases
+    const CaseClientLoader = (await import("@/app/components/CaseClientLoader")).default;
+    return <CaseClientLoader caseId={id} />;
+  }
 
   const criminals = (criminalsData as any).criminals || [];
   const users = (usersData as any).users || [];
@@ -38,8 +70,7 @@ export default async function CasePage({ params }: Props) {
     return p;
   }
 
-  const primaryCriminalId =
-    c.criminalIds && c.criminalIds.length > 0 ? c.criminalIds[0] : null;
+  const primaryCriminalId = c.criminalId ? c.criminalId : null;
   const primaryCriminal = primaryCriminalId
     ? criminals.find((x: any) => x.id === primaryCriminalId)
     : null;
@@ -74,7 +105,7 @@ export default async function CasePage({ params }: Props) {
               </p>
             </section>
 
-            <section className={styles.section}>
+            <section className={`${styles.section} ${styles.criminalSection}`}>
               <h3 className={styles.sectionHeader}>Criminals</h3>
               {!primaryCriminal && (
                 <p className={styles.sectionMuted}>No criminal linked.</p>
@@ -101,11 +132,9 @@ export default async function CasePage({ params }: Props) {
               )}
             </section>
 
-            <section className={styles.section}>
-              <h3 className={styles.sectionHeader}>Reports for this case</h3>
-              {caseReports.length === 0 ? (
-                <p className={styles.sectionMuted}>No reports.</p>
-              ) : (
+            {caseReports.length > 0 && (
+              <section className={styles.section}>
+                <h3 className={styles.sectionHeader}>Reports for this case</h3>
                 <ul className={styles.caseReportsList}>
                   {caseReports.map((r: any) => (
                     <li key={r.id} className={styles.caseReportItem}>
@@ -115,12 +144,10 @@ export default async function CasePage({ params }: Props) {
                           className={styles.caseReportLink}
                         >
                           <div className={styles.caseReportTitle}>
-                            Report #{r.id} —{" "}
+                            Report #{r.id} — {" "}
                             {new Date(r.date).toLocaleString()}
                           </div>
-                          <div className={styles.caseReportMeta}>
-                            {r.location}
-                          </div>
+                          <div className={styles.caseReportMeta}>{r.location}</div>
                         </Link>
                         <ReportReviewSummary reportId={r.id} />
                       </div>
@@ -128,8 +155,8 @@ export default async function CasePage({ params }: Props) {
                     </li>
                   ))}
                 </ul>
-              )}
-            </section>
+              </section>
+            )}
           </div>
 
           {/* PRAWA KOLUMNA: activity */}
@@ -138,6 +165,7 @@ export default async function CasePage({ params }: Props) {
 
         {/* narzędzia klientowe (raport + zdjęcia + podgląd) */}
         <section className={styles.toolsSection}>
+          
           <ReportForm caseId={c.id} />
           <CasePhotosManager caseId={c.id} />
           <CaseReportsClient caseId={c.id} />

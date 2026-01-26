@@ -6,9 +6,11 @@ import Link from "next/link";
 import ReportReviewSummary from "@/app/components/ReportReviewSummary";
 import ActivityLog from "@/app/components/ActivityLog";
 import ReportsListClient from "@/app/components/ReportsListClient";
+import LocalSync from "@/app/components/LocalSync";
 import casesData from "@/data/cases.json";
 import reportsData from "@/data/reports.json";
 import usersData from "@/data/users.json";
+import criminalsData from "@/data/criminals.json";
 import styles from "./dashboard.module.css";
 
 export default function DashboardPage() {
@@ -29,9 +31,44 @@ export default function DashboardPage() {
       setUser(u);
 
       const allCases = (casesData as any).cases || [];
+      // include locally created cases
+      let combined = [...allCases];
+      try {
+        const customRaw = localStorage.getItem("customCases");
+        const custom = customRaw ? JSON.parse(customRaw) : [];
+        if (custom && custom.length) combined = [...custom, ...combined];
+      } catch {}
+
+      // filter out deleted static cases (IDs stored in localStorage)
+      try {
+        const delRaw = localStorage.getItem('deletedCaseIds') || '[]';
+        const deleted = delRaw ? JSON.parse(delRaw) : [];
+        if (deleted && deleted.length) {
+          combined = combined.filter((c: any) => !deleted.includes(Number(c.id)));
+        }
+      } catch {}
+
+      // deduplicate by id (keep first occurrence: custom overrides static)
+      const seen = new Set<number>();
+      const unique: any[] = [];
+      for (const item of combined) {
+        const idVal = Number(item.id);
+        if (!seen.has(idVal)) {
+          seen.add(idVal);
+          unique.push(item);
+        }
+      }
+      combined = unique;
+
       if (u.role === "police_officer") {
-        const mine = allCases.filter((c: any) => c.assignedUserId === u.id);
+        const mine = combined.filter((c: any) => c.assignedUserId === u.id);
         setCases(mine);
+      } else if (u.role === "colonel") {
+        // colonel can view all cases
+        setCases(combined);
+      } else if (u.username === "nico.walker") {
+        // special user can view all cases
+        setCases(combined);
       } else {
         setCases([]);
       }
@@ -52,14 +89,7 @@ export default function DashboardPage() {
           <p className={styles.subtitle}>Role: {user.role}</p>
         </div>
         <div className={styles.topBarRight}>
-          {user.role === "police_officer" && (
-            <button
-              className={styles.topButton}
-              onClick={() => router.push("/cases")}
-            >
-              All cases
-            </button>
-          )}
+         
          
           <button
             className={styles.topButtonSecondary}
@@ -99,6 +129,8 @@ export default function DashboardPage() {
         </>
       )}
 
+      {/* moved: viewer panel for specific user is shown inside colonel left column below Reports */}
+
 
       {user.role === "colonel" && (
   <section className={styles.cols2}>
@@ -116,9 +148,23 @@ export default function DashboardPage() {
 
       <div className={styles.card}>
         <h3 className={styles.cardTitle}>Reports</h3>
+            {/* Local sync tools for exporting/importing localStorage */}
+            <div style={{ marginTop: 12 }}>
+              <LocalSync />
+            </div>
         <ReportsListClient
           reports={(reportsData as any).reports || []}
         />
+        {user && user.username === "nico.walker" && (
+          <div style={{ marginTop: 12 }}>
+            <h4 className={styles.cardTitle}>All cases (viewer)</h4>
+            {cases.length === 0 ? (
+              <p className={styles.muted}>No cases available.</p>
+            ) : (
+              <FilteredCaseList cases={cases} />
+            )}
+          </div>
+        )}
       </div>
     </div>
 
@@ -130,6 +176,11 @@ export default function DashboardPage() {
         <h3 className={styles.cardTitle}>Officers</h3>
         <OfficersList />
       </div>
+
+        <div className={styles.card}>
+          <h3 className={styles.cardTitle}>Create criminal</h3>
+          <CreateCriminalForm />
+        </div>
 
       <div className={styles.card}>
         <h3 className={styles.cardTitle}>Activity log</h3>
@@ -170,9 +221,46 @@ export default function DashboardPage() {
   );
 }
 
+function CreateCriminalForm() {
+  const [fullName, setFullName] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!fullName) return;
+    const c = { id: Date.now(), fullName, description, image, status: "unknown" };
+    try {
+      const raw = localStorage.getItem('customCriminals') || '[]';
+      const arr = raw ? JSON.parse(raw) : [];
+      arr.unshift(c);
+      localStorage.setItem('customCriminals', JSON.stringify(arr));
+      const log = JSON.parse(localStorage.getItem('activityLog') || '[]');
+      log.push({ ts: new Date().toISOString(), action: 'create_criminal', details: `Created criminal ${fullName}`, criminalId: c.id });
+      localStorage.setItem('activityLog', JSON.stringify(log));
+    } catch {}
+    setFullName(''); setDescription(''); setImage('');
+    alert('Criminal added locally');
+  }
+
+  return (
+    <form onSubmit={submit} className={styles.formStack}>
+      <input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Full name" className={styles.input} />
+      <input value={image} onChange={(e) => setImage(e.target.value)} placeholder="Image path (optional)" className={styles.input} />
+      <textarea value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Description" className={`${styles.input} ${styles.textarea}`} />
+      <button className={styles.primaryButton} type="submit">Create criminal (local)</button>
+    </form>
+  );
+}
+
 function OfficersList() {
   const users = (usersData as any).users || [];
   const officers = users.filter((u: any) => u.role === "police_officer");
+  const staticCriminals = (criminalsData as any).criminals || [];
+  const customCrimRaw = typeof window !== 'undefined' ? localStorage.getItem('customCriminals') || '[]' : '[]';
+  const customCrim = customCrimRaw ? JSON.parse(customCrimRaw) : [];
+  const allCriminals = [...customCrim, ...staticCriminals];
+  const [selectedCriminal, setSelectedCriminal] = useState<number | null>(null);
   if (officers.length === 0)
     return <p className={styles.muted}>No officers found.</p>;
   return (
@@ -184,7 +272,15 @@ function OfficersList() {
           </div>
           <div className={styles.simpleListSub}>
             Assigned cases:{" "}
-            {o.assignedCaseIds ? o.assignedCaseIds.length : 0}
+            {(() => {
+              try {
+                const staticCases = (casesData as any).cases || [];
+                const customRaw = localStorage.getItem('customCases') || '[]';
+                const custom = customRaw ? JSON.parse(customRaw) : [];
+                const combined = [...custom, ...staticCases];
+                return combined.filter((c: any) => c.assignedUserId === o.id).length;
+              } catch { return 0; }
+            })()}
           </div>
         </li>
       ))}
@@ -193,12 +289,66 @@ function OfficersList() {
 }
 
 function ReportsForOfficer({ casesList }: { casesList: any[] }) {
-  const allReports = (reportsData as any).reports || [];
-  const myReports = allReports.filter((r: any) =>
-    casesList.some((c) => c.id === r.caseId)
-  );
-  if (myReports.length === 0)
-    return <p className={styles.muted}>No reports for your cases.</p>;
+  const [user, setUser] = React.useState<any | null>(null);
+  const [reports, setReports] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    try {
+      const s = sessionStorage.getItem('user');
+      if (s) setUser(JSON.parse(s));
+    } catch {}
+
+    function load() {
+      try {
+        const staticReports = (reportsData as any).reports || [];
+        const localRaw = localStorage.getItem('customReports') || '[]';
+        const localReports = localRaw ? JSON.parse(localRaw) : [];
+        const merged = [...localReports, ...staticReports];
+        // deduplicate by id, keep first occurrence (local overrides static)
+        const seen = new Set<number>();
+        const deduped: any[] = [];
+        for (const it of merged) {
+          const idVal = Number(it?.id);
+          if (!seen.has(idVal)) {
+            seen.add(idVal);
+            deduped.push(it);
+          }
+        }
+        setReports(deduped);
+      } catch (err) { setReports([]); }
+    }
+
+    load();
+    // watch storage events in case another tab updated reports
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'customReports' || e.key === 'customCases' || e.key === 'reportReviews') load();
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  if (!user) return <p className={styles.muted}>Loading user...</p>;
+
+  // compute assigned cases for the user (static + custom)
+  function getAssignedCaseIds() {
+    try {
+      const staticCases = (casesData as any).cases || [];
+      const customRaw = localStorage.getItem('customCases') || '[]';
+      const custom = customRaw ? JSON.parse(customRaw) : [];
+      const combined = [...custom, ...staticCases];
+      return combined.filter((c: any) => Number(c.assignedUserId) === Number(user.id)).map((c: any) => Number(c.id));
+    } catch { return [] as number[]; }
+  }
+
+  const assignedIds = getAssignedCaseIds();
+
+  const myReports = reports.filter((r: any) => {
+    if (r.authorId && Number(r.authorId) === Number(user.id)) return true;
+    return assignedIds.includes(Number(r.caseId));
+  });
+
+  if (myReports.length === 0) return <p className={styles.muted}>No reports for your cases.</p>;
+
   return (
     <ul className={styles.simpleList}>
       {myReports.map((r: any) => (
@@ -299,6 +449,17 @@ function CreateCaseForm({ onCreate }: { onCreate: (c: any) => void }) {
   const [number, setNumber] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [assignedTo, setAssignedTo] = useState<number | null>(null);
+
+  // criminals available when creating a case (merge static + custom)
+  const staticCriminals = (criminalsData as any).criminals || [];
+  const customCrimRaw = typeof window !== 'undefined' ? localStorage.getItem('customCriminals') || '[]' : '[]';
+  const customCrim = customCrimRaw ? JSON.parse(customCrimRaw) : [];
+  const allCriminals = [...customCrim, ...staticCriminals];
+  const [selectedCriminal, setSelectedCriminal] = useState<number | null>(null);
+
+  const users = (usersData as any).users || [];
+  const officers = users.filter((u: any) => u.role === "police_officer");
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -309,7 +470,16 @@ function CreateCaseForm({ onCreate }: { onCreate: (c: any) => void }) {
       title,
       description,
       status: "new",
+      assignedUserId: assignedTo || null,
+      criminalId: selectedCriminal || null,
     };
+    // persist to local storage so assigned officers can see it
+    try {
+      const raw = localStorage.getItem("customCases") || "[]";
+      const arr = raw ? JSON.parse(raw) : [];
+      arr.unshift(newCase);
+      localStorage.setItem("customCases", JSON.stringify(arr));
+    } catch {}
     onCreate(newCase);
     try {
       const log = JSON.parse(localStorage.getItem("activityLog") || "[]");
@@ -346,6 +516,18 @@ function CreateCaseForm({ onCreate }: { onCreate: (c: any) => void }) {
         placeholder="Description"
         className={`${styles.input} ${styles.textarea}`}
       />
+      <select value={assignedTo ?? ""} onChange={(e) => setAssignedTo(e.target.value ? Number(e.target.value) : null)} className={styles.input}>
+        <option value="">Assign to officer (optional)</option>
+        {officers.map((o: any) => (
+          <option key={o.id} value={o.id}>{o.firstName} {o.lastName} ({o.username})</option>
+        ))}
+      </select>
+      <select value={selectedCriminal ?? ""} onChange={(e) => setSelectedCriminal(e.target.value ? Number(e.target.value) : null)} className={styles.input}>
+        <option value="">Link criminal (optional)</option>
+        {allCriminals.map((c: any) => (
+          <option key={c.id} value={c.id}>{c.fullName || c.name || `#${c.id}`}</option>
+        ))}
+      </select>
       <button className={styles.primaryButton} type="submit">
         Create (local)
       </button>

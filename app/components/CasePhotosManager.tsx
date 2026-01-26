@@ -63,7 +63,9 @@ export default function CasePhotosManager({ caseId }: { caseId: number }) {
     } catch {}
   }
 
-  if (!user || user.role !== 'police_officer') {
+  const editable = !!user && (user.role === "police_officer" || user.role === "colonel");
+
+  if (!editable) {
     // show photos read-only to others
     return (
       <div className="mt-4">

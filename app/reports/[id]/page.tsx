@@ -5,6 +5,7 @@ import Link from "next/link";
 import ReportReviewControls from "@/app/components/ReportReviewControls";
 import ReportClientView from "@/app/components/ReportClientView";
 import ReportReviewSummary from "@/app/components/ReportReviewSummary";
+import ReportClientEditor from "@/app/components/ReportClientEditor";
 import styles from "./report-detail.module.css";
 
 type Props = { params: any };
@@ -21,7 +22,7 @@ export default async function ReportPage({ params }: Props) {
   }
 
   const users = (usersData as any).users || [];
-  const author = users.find((u: any) => u.id === r.authorId);
+  const author = users.find((u: any) => u.id === r.authorId) || null;
 
   function norm(p: string | undefined) {
     if (!p) return "";
@@ -56,7 +57,9 @@ export default async function ReportPage({ params }: Props) {
         <p className={styles.fieldLine}>
           Author:{" "}
           {author
-            ? `${author.firstName} ${author.lastName}`
+            ? (author.firstName || author.username
+                ? `${author.firstName ? author.firstName : author.username} ${author.lastName ? author.lastName : ''}`.trim()
+                : String(author.id || r.authorId))
             : r.authorId}
         </p>
 
@@ -78,6 +81,10 @@ export default async function ReportPage({ params }: Props) {
 
         <div className={styles.reviewControls}>
           <ReportReviewControls reportId={r.id} />
+        </div>
+
+        <div>
+          <ReportClientEditor initial={r} />
         </div>
 
         <section className={styles.section}>

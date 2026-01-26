@@ -30,8 +30,19 @@ export default function ReportsListClient({ reports }: { reports: any[] }) {
         ...r,
         _isLocal: true,
       }));
-      const merged = [...(reports || []), ...localMarked];
-      const visible = merged.filter((r: any) => !deleted.includes(r.id));
+      // merge local first so local entries override static ones with same id
+      const merged = [...localMarked, ...(reports || [])];
+      // deduplicate by id (keep first occurrence - local overrides static)
+      const seen = new Set<number>();
+      const deduped: any[] = [];
+      for (const it of merged) {
+        const idVal = Number(it?.id);
+        if (!seen.has(idVal)) {
+          seen.add(idVal);
+          deduped.push(it);
+        }
+      }
+      const visible = deduped.filter((r: any) => !deleted.includes(r.id));
       visible.sort((a: any, b: any) =>
         (b.date || "").localeCompare(a.date || "")
       );
@@ -78,7 +89,7 @@ export default function ReportsListClient({ reports }: { reports: any[] }) {
                 )}
               </div>
               <div className={styles.meta}>
-                {new Date(r.date).toLocaleString()} — {r.location}
+                {new Date(r.date).toLocaleString()} — {r.location} {r.status ? ` — status: ${r.status}` : ''}
               </div>
             </Link>
 

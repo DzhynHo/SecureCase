@@ -31,6 +31,27 @@ export default function CaseReportsClient({ caseId }: { caseId: number }) {
   if (!user || user.role !== "police_officer") return null;
   if (reports.length === 0) return null;
 
+  function removeReport(id: string | number) {
+    if (!confirm("Remove this local report?")) return;
+    try {
+      const raw = localStorage.getItem("customReports") || "[]";
+      let arr = JSON.parse(raw || "[]");
+      arr = arr.filter((x: any) => String(x.id) !== String(id));
+      localStorage.setItem("customReports", JSON.stringify(arr));
+      setReports((prev) => prev.filter((r) => String(r.id) !== String(id)));
+      // log activity
+      try {
+        const alKey = "activityLog";
+        const rawAl = localStorage.getItem(alKey) || "[]";
+        const al = JSON.parse(rawAl || "[]");
+        al.push({ time: new Date().toISOString(), action: `Deleted local report ${id}` });
+        localStorage.setItem(alKey, JSON.stringify(al));
+      } catch {}
+    } catch (err) {
+      // ignore
+    }
+  }
+
   return (
     <div className={styles.wrapper}>
       <h4 className={styles.title}>Local reports for this case</h4>
@@ -44,7 +65,10 @@ export default function CaseReportsClient({ caseId }: { caseId: number }) {
                 </div>
                 <div className={styles.itemMeta}>{r.location}</div>
               </Link>
-              <ReportReviewSummary reportId={r.id} />
+              <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                <ReportReviewSummary reportId={r.id} />
+                <button className={styles.deleteBtn} onClick={() => removeReport(r.id)}>Delete</button>
+              </div>
             </div>
             <div className={styles.body}>{r.content}</div>
           </li>

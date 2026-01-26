@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import styles from './start-overlay.module.css';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import styles from "./start-overlay.module.css";
 
-const APP_NAME = 'Securecase';
+const APP_NAME = "Securecase";
 
 type FallingLetter = {
   id: number;
@@ -17,12 +17,12 @@ type FallingLetter = {
 
 export default function StartOverlay() {
   const [open, setOpen] = useState(true);
+  const [closing, setClosing] = useState(false);
   const [lettersBg, setLettersBg] = useState<FallingLetter[]>([]);
   const router = useRouter();
 
-  
   useEffect(() => {
-    const count = 200; // густота
+    const count = 200;
     const arr: FallingLetter[] = Array.from({ length: count }).map((_, i) => ({
       id: i,
       char: String.fromCharCode(65 + Math.floor(Math.random() * 26)),
@@ -35,15 +35,28 @@ export default function StartOverlay() {
 
   if (!open) return null;
 
+  function handleClose() {
+    if (closing) return;
+    setClosing(true);
+
+    setTimeout(() => {
+      setOpen(false);
+      router.push("/");
+    }, 600); // должно совпадать с CSS transition
+  }
+
   return (
-    <div className={styles.overlay} onClick={() => { setOpen(false); router.push('/login'); }}>
-      {/* фон з падаючими літерами – тепер детермінований після першого рендера на клієнті */}
+    <div
+      className={`${styles.overlay} ${closing ? styles.closing : ""}`}
+      onClick={handleClose}
+    >
+      {/* фон с падающими буквами */}
       <div
         style={{
-          position: 'absolute',
+          position: "absolute",
           inset: 0,
-          overflow: 'hidden',
-          pointerEvents: 'none',
+          overflow: "hidden",
+          pointerEvents: "none",
         }}
       >
         {lettersBg.map((l) => (
@@ -61,27 +74,16 @@ export default function StartOverlay() {
         ))}
       </div>
 
+      {/* стеклянная карточка */}
       <div className={styles.glassCard}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '1.2rem',
-          }}
-        >
-          <Image
-            src="/images/logo.png"
-            alt="Securecase logo"
-            width={400}
-            height={400}
-            style={{ objectFit: 'contain' }}
-            priority
-          />
-
-          {/* only logo shown */}
-
-        </div>
+        <Image
+          src="/images/logo1.png"
+          alt="Securecase logo"
+          width={400}
+          height={400}
+          style={{ objectFit: "contain" }}
+          priority
+        />
       </div>
     </div>
   );

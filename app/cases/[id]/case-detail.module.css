@@ -68,7 +68,7 @@
   border-radius: 0.9rem;
   border: 1px solid #1f2937;
   background-color: #020617;
-  padding: 0.9rem 1rem;
+  padding: 1rem 1.1rem;
 }
 
 .sectionHeader {
@@ -96,15 +96,29 @@
 /* blok z criminalem */
 .criminalCard {
   display: flex;
-  gap: 0.8rem;
+  gap: 1rem;
   align-items: flex-start;
 }
 
+.criminalCard > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* ensure criminals section boxes are visually balanced */
+.criminalSection {
+  min-height: 220px;
+}
+
 .criminalImage {
-  width: 80px;
-  height: 80px;
-  border-radius: 0.6rem;
+  width: 140px;
+  height: 140px;
+  border-radius: 0.9rem;
   object-fit: cover;
+  background: #0b1220;
+  padding: 6px;
 }
 
 .criminalName {
@@ -191,4 +205,6 @@
   .sectionsGrid {
     grid-template-columns: minmax(0, 1fr);
   }
+  .criminalImage { width: 100px; height: 100px; padding: 4px; }
+  .criminalSection { min-height: 0; }
 }
