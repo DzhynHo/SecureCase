@@ -1,6 +1,5 @@
 # SecureCase
 
-<<<<<<< HEAD
 SecureCase to system zarządzania sprawami policyjnymi umożliwiający cyfrowe zarządzanie sprawami, przestępcami, raportami oraz dowodami w ramach jednostki policji.
 ## Funkcjonalności
 
