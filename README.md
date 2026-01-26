@@ -44,6 +44,8 @@ SecureCase to system zarządzania sprawami policyjnymi umożliwiający cyfrowe z
   - Galeria dowodów przypisana do konkretnej sprawy, z możliwością przeglądania.
 
 ## Struktura projektu
+
+```text
 .
 ├── app
 │   ├── api
@@ -114,6 +116,7 @@ SecureCase to system zarządzania sprawami policyjnymi umożliwiający cyfrowe z
 ├── README.md
 └── tsconfig.json
 
+
 ### Użytkownicy (policjanci)
 
 Uruchamianie 
@@ -129,7 +132,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 
-=======
+
 Khylchenko Valeriia 21279, Yana Trotsenko 21232
 =======
 
